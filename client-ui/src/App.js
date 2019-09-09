@@ -2,6 +2,24 @@ import React from 'react';
 import axios from 'axios'
 import './App.css';
 
+function ClientTaskList(props){
+  return(
+    <div>
+      <h3>Client Tasks</h3>
+      <ul className="taskList">
+        {props.tasks.map((task) =>(
+          <li key={task[0]} className="tasks">
+            <span className="task">{task[1]}</span>
+            <button onClick={() => props.completeTask(task[0])}>Complete</button>
+            <br />
+            <span className="list">{task[2]}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+
 class App extends React.Component{
 
   constructor(props){
@@ -94,7 +112,9 @@ class App extends React.Component{
   render(){
     return (
       <div>
-        <p>ClientTaskList</p>
+        <ClientTaskList
+          tasks={this.state.clientTasks}
+        />
       </div>
     )
   }
