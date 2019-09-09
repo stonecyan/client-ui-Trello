@@ -94,6 +94,19 @@ class App extends React.Component{
     return clientIdTask
   }
 
+  completeTask(taskId){
+    console.log(taskId)
+    var apiKey = "6b4bfdf2a878cdd5935ad1f89b19b828";
+    var oauthToken = "2222c8bc7d6190a34eda3cfa77d8444954447c042cfb6e6609df5e21e536888e";
+    var url = `https://api.trello.com/1/cards/${taskId}/idList?value=5d6ee5ce0766e112671af869&key=${apiKey}&token=${oauthToken}`
+    var headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Content-Type': 'application/json'
+    }
+    console.log(url)
+    axios.put(url, headers)
+  }
+
   componentDidMount(){
     var trelloResponse;
     var clientTaskIds;
@@ -114,6 +127,7 @@ class App extends React.Component{
       <div>
         <ClientTaskList
           tasks={this.state.clientTasks}
+          completeTask={this.completeTask}
         />
       </div>
     )
