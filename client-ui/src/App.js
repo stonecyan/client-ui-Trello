@@ -7,10 +7,10 @@ function ClientTaskList(props){
     <div>
       <h3>Client Tasks</h3>
       <ul className="taskList">
-        {props.tasks.map((task) =>(
-          <li key={task[0]} className="tasks">
-            <span className="task">{task[1]}</span>
-            <button onClick={() => props.completeTask(task[0])}>Complete</button>
+        {props.tasks.map((task, index) =>(
+          <li key={index} className="tasks">
+            <span className={task[3]}>{task[1]}</span>
+            <button onClick={() => props.completeTask(task[0], index)}>Complete</button>
             <br />
             <span className="list">{task[2]}</span>
           </li>
@@ -27,8 +27,8 @@ class App extends React.Component{
       this.state={
         clientTasks: []
       }
+    this.completeTask = this.completeTask.bind(this);
   }
-
   getTaskLists(boardId){
     var apiKey = "6b4bfdf2a878cdd5935ad1f89b19b828";
     var oauthToken = "2222c8bc7d6190a34eda3cfa77d8444954447c042cfb6e6609df5e21e536888e";
@@ -89,22 +89,25 @@ class App extends React.Component{
     var i;
     var clientIdTask = []
     for (i=0; i<clientId.length; i++){
-      clientIdTask.push([clientId[i][0],clientTasks[i][200],taskList.get(clientId[i][1])])
+      clientIdTask.push([clientId[i][0],clientTasks[i][200],taskList.get(clientId[i][1]),"incomplete"])
     }
     return clientIdTask
   }
 
-  completeTask(taskId){
+  completeTask(taskId, i){
+    var index = i
+    this.setState((prevState)  => {
+        var newState = prevState
+        newState["clientTasks"][index][3]="complete"
+        return {newState}
+      }
+    )
     var apiKey = "6b4bfdf2a878cdd5935ad1f89b19b828";
     var oauthToken = "2222c8bc7d6190a34eda3cfa77d8444954447c042cfb6e6609df5e21e536888e";
     var url = `https://api.trello.com/1/cards/${taskId}/idList?value=5d6ee5ce0766e112671af869&key=${apiKey}&token=${oauthToken}`
-    var headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Content-Type': 'application/json'
+    axios.put(url)
+
     }
-    console.log(url)
-    axios.put(url, headers)
-  }
 
   componentDidMount(){
     var trelloResponse;
@@ -116,9 +119,6 @@ class App extends React.Component{
       })
       )
 
-  }
-  componentDidUpdate(){
-    console.log(this.state.clientTasks)
   }
 
   render(){
